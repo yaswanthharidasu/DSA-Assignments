@@ -1,13 +1,13 @@
+#define Node LRUNode<key_type, value_type>
 using namespace std;
 
 // Node of Doubly linked list
 template< class key_type, class value_type>
-class Node{
+class LRUNode{
     public:
     key_type key;
     value_type value;
-    Node<key_type, value_type> *prev;
-    Node<key_type, value_type> *next;
+    Node *prev, *next;
 
     Node(){
         prev = NULL;

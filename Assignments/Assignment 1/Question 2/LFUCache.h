@@ -2,11 +2,12 @@
 #include<unordered_map>
 #include"LFUNode.h"
 #define Node LFUNode<key_type, value_type>
+
 using namespace std;
 
-template< class key_type, class value_type>
 // Uses Heap for accessing least frequently used keys 
 // hashtable for retreving the values of keys in O(1) 
+template< class key_type, class value_type>
 class LFUCache{
     Node *heap;
     // Capacity of the cache

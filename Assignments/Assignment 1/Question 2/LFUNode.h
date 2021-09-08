@@ -1,5 +1,4 @@
 #define Node LFUNode<key_type, value_type>
-
 using namespace std;
 
 // Node of the heap array
