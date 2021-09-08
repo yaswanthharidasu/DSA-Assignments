@@ -45,5 +45,6 @@
         "streambuf": "cpp",
         "typeinfo": "cpp",
         "map": "cpp"
-    }
+    },
+    "workbench.editor.enablePreviewFromQuickOpen": true
 }
