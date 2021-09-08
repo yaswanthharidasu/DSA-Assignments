@@ -37,5 +37,4 @@ class LFUCache{
 
     // Returns the value associated with the key in cache
     int get(int key);
-
 };

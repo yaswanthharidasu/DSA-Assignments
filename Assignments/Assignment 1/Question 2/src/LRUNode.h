@@ -8,5 +8,4 @@ class LRUNode{
     LRUNode();
 
     LRUNode(int key, int value);
-
 };
