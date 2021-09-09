@@ -7,8 +7,8 @@ using namespace std;
 LRUCache :: LRUCache(int capacity){
     this->capacity = capacity;
     // Initially DLL is empty, create head and tail nodes
-    head = new LRUNode();
-    tail = new LRUNode();
+    head = new LRUNode(-1, -1);
+    tail = new LRUNode(-1, -1);
     head->next = tail;
     tail->prev = head;
 }

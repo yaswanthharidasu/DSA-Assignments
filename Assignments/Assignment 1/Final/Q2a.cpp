@@ -11,15 +11,8 @@ class LRUNode{
     int value;
     LRUNode *prev, *next;
 
-    LRUNode();
-
     LRUNode(int key, int value);
 };
-
-LRUNode :: LRUNode(){
-    prev = NULL;
-    next = NULL;
-}
 
 LRUNode :: LRUNode(int key, int value){
     this->key = key;
@@ -61,8 +54,8 @@ class LRUCache{
 LRUCache :: LRUCache(int capacity){
     this->capacity = capacity;
     // Initially DLL is empty, create head and tail nodes
-    head = new LRUNode();
-    tail = new LRUNode();
+    head = new LRUNode(-1, -1);
+    tail = new LRUNode(-1, -1);
     head->next = tail;
     tail->prev = head;
 }

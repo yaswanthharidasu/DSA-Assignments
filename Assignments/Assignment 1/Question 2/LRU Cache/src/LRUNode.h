@@ -5,7 +5,5 @@ class LRUNode{
     int value;
     LRUNode *prev, *next;
 
-    LRUNode();
-
     LRUNode(int key, int value);
 };
