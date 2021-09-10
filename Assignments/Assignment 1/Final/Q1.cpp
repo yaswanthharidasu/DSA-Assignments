@@ -486,7 +486,7 @@ string ExpressionEval :: postfixEval(string expression){
 
 string ExpressionEval :: evaluate(string input){
     string postfix = infixToPostfix(input);
-    // cout<<"postfix:"<<postfix<<endl;
+    cout<<"postfix:"<<postfix<<endl;
     string result = postfixEval(postfix);
     return result;
 }
@@ -497,25 +497,25 @@ string ExpressionEval :: evaluate(string input){
 
 int main(){
 
-    // cout<<"Enter expression: ";
+    cout<<"Enter expression: ";
 
-    // string input;
-    // getline(cin, input);
+    string input;
+    getline(cin, input);
 
-    // ExpressionEval expEval;
+    ExpressionEval expEval;
 
-    // string result = expEval.evaluate(input);
+    string result = expEval.evaluate(input);
 
-    // cout<<"Result: "<<endl;
-    // cout<<result<<endl;
+    cout<<"Result: "<<endl;
+    cout<<result<<endl;
 
-    string num1 = "1042895339958367383993838393393977585594920009764434";
-    string num2 = "4356345343435545343434234453556645343423232";
+    // string num1 = "1042895339958367383993838393393977585594920009764434";
+    // string num2 = "4356345343435545343434234453556645343423232";
 
-    BigIntegerUtils utils;
+    // BigIntegerUtils utils;
 
-    cout<<"GCD Result: "<<endl;
-    cout<<utils.GCD(num1, num2)<<endl;
+    // cout<<"GCD Result: "<<endl;
+    // cout<<utils.GCD(num1, num2)<<endl;
 
     return 0;
 }
