@@ -10,6 +10,7 @@ output: $(OBJ_FILES)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) -c $< -o $@
 	@echo Compiled "$<" successfully
+	@echo
 
 # "make clean" command removes the .o files in the obj directory and output file
 clean: 

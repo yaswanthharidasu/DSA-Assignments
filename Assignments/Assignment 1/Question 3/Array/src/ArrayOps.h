@@ -1,9 +1,11 @@
 #include"ArrayRepresentation.h"
+
+template<class T>
 class ArrayOps{
     public:
-    int** addition(ArrayRep m1, ArrayRep m2);
+    T** addition(ArrayRep<T> m1, ArrayRep<T> m2);
 
-    int** multiplication(ArrayRep m1, ArrayRep m2);
+    T** multiplication(ArrayRep<T> m1, ArrayRep<T> m2);
 
-    int** transpose(ArrayRep m);
+    T** transpose(ArrayRep<T> m);
 };

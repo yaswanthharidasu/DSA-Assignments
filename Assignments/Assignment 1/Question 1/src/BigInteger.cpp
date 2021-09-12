@@ -2,7 +2,7 @@
 #include"BigInteger.h"
 
 using namespace std;
-typedef long long ll;
+typedef long long int ll;
 
 // Performs addition of two integers which are provided as strings
 string BigInteger :: add(string op1, string op2){
@@ -47,7 +47,6 @@ string BigInteger :: add(string op1, string op2){
     result = string(result.rbegin(), result.rend());
 
     return result;
-
 }
 
 // Performs subtraction of two integers which are provided as strings
@@ -112,18 +111,21 @@ string BigInteger :: multiply(string op1, string op2){
         op1 = op2;
         op2 = temp;
     }
-
     // The result can atmost of size op1.length()+op2.length()
     // Hence create a string 'result' of size op1.length()+op2.length()
     string result(op1.length()+op2.length(), 0);
 
     for(ll i=op2.length()-1; i>=0; i--){
         for(ll j=op1.length()-1; j>=0; j--){
+            int num1 = op1[j]-'0', num2 = op2[i]-'0';
+            int ans = num1 * num2;
             // Adding result[i+j+1] if there exists carry
-            ll val = (op2[i]-'0')*(op1[j]-'0') + result[i+j+1];
-            // Storing the carry 
-            result[i+j] += val/10;
-            result[i+j+1] = val%10;
+            ans += result[i+j+1];
+            // Ans can be atmost of two digits. Hence, LSD is the result and MSD is the carry
+            // Storing the carry for the next digit
+            result[i+j] += ans/10;
+            // Storing the value
+            result[i+j+1] = ans%10;
         }
     }
 
@@ -138,15 +140,42 @@ string BigInteger :: multiply(string op1, string op2){
 }
 
 // Performs exponentiation
-string BigInteger :: exponentiation(string base, long long int exp){
+string BigInteger :: exponentiation(string base, ll exp){
     string result = "1";
     while(exp > 0){
         if(exp & 1){
             result = multiply(result, base);
         }
         base = multiply(base, base);
-        cout<<base<<endl;
+        // cout<<base<<endl;
         exp = exp>>1;
     }
     return result;
+}
+
+// Performs num % mod
+string BigInteger :: modulo(string num, string mod){
+// Performing modulo by doubling the mod value until it is smaller than num
+// Whenever the max value of mod is reached then subtract it from the num 
+// Then again repeat the process.
+// The doubled values are stored in the form of Linked list inorder to avoid calculating again
+    Node *head = new Node(mod);
+    string currentMod = mod;
+    while(num.length() > currentMod.length() || (num.length() == currentMod.length() && num.compare(currentMod) > 0)){
+        Node *twice = new Node(multiply(head->current, "2"));
+        if(twice->current.length() > num.length() || (twice->current.length() == num.length() && num.compare(twice->current) < 0))
+            break;
+        currentMod = twice->current;
+        twice->next = head;
+        head = twice;
+    }
+    // After reaching the max value of mod then perfoming the subtraction
+    while(head!=NULL){
+        if(head->current.length() > num.length() || (head->current.length() == num.length() && head->current.compare(num) > 0))
+            head = head->next;
+        else{
+            num = subtract(num, head->current);
+        }
+    }
+    return num;
 }

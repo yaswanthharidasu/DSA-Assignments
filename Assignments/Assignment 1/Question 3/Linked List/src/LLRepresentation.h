@@ -1,16 +1,20 @@
 #include<iostream>
+template <class T>
 class Node{
     public:
-    int row, column, value;
+    int row, column;
+    T value;
     Node *next;
-    Node(int row, int column, int value);
+    Node(int row, int column, T value);
 };
 
-
+template<class T>
 class LinkedList{
     public:
-    Node *head;
-    int **matrix;
-    LinkedList(int rows, int columns, int NNZ, int **matrix);
+    Node<T> *head;
+    T **matrix;
+    // Constructor
+    LinkedList(int rows, int columns, int NNZ, T **matrix);
+    // Converts into sparse matrix
     void toSparse();
 };

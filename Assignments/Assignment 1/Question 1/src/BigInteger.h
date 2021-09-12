@@ -1,4 +1,8 @@
+#ifndef __BIGINTEGER__
+#define __BIGINTEGER__
+
 #include<string>
+#include"Node.h"
 using namespace std;
 
 class BigInteger{
@@ -15,4 +19,9 @@ class BigInteger{
 
     // Performs exponentiation
     string exponentiation(string base, long long int exp);
+
+    // Performs num % mod
+    string modulo(string num, string mod);
 };
+
+#endif

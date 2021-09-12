@@ -2,6 +2,8 @@
 #include<unordered_map>
 using namespace std;
 
+// Using FrequencyNode class in KeyNode as well as KeyNode class in FrequencyNode
+// Hence delcaring FrequencyNode class above so that it can be used in KeyNode class
 class FrequencyNode;
 
 // ================================================ Class KeyNode: Begin =============================================================================

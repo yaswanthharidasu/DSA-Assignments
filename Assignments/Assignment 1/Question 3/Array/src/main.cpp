@@ -1,10 +1,12 @@
 #include<iostream>
 #include"ArrayOps.h"
+#include"ArrayRepresentation.h"
 using namespace std;
 
-void readMatrix(int rows, int columns, int &NNZ, int **matrix){
+template <class T>
+void readMatrix(int rows, int columns, int &NNZ, T **matrix){
     for(int i=0; i<rows; i++){
-        matrix[i] = new int[columns];
+        matrix[i] = new T[columns];
         for(int j=0; j<columns; j++){
             cin>>matrix[i][j];
             if(matrix[i][j] != 0)
@@ -13,7 +15,8 @@ void readMatrix(int rows, int columns, int &NNZ, int **matrix){
     }
 }
 
-void displayMatrix(int **matrix, int NNZ){
+template <class T>
+void displayMatrix(T **matrix, int NNZ){
     cout<<"========================================="<<endl;
     cout<<"Triplet representation of Sparse matrix: "<<endl;
     cout<<"========================================="<<endl;
@@ -25,67 +28,7 @@ void displayMatrix(int **matrix, int NNZ){
     cout<<"-----------------------------------------"<<endl;
 }
 
-void addition(){
-    int rows, columns;
-    int NNZ1=0, NNZ2=0;
-
-    cout<<"Enter no.of rows and columns:";
-    cin>>rows>>columns;
-
-    cout<<endl<<"Enter First matrix values:"<<endl;
-
-    int **matrix1 = new int*[rows];
-    readMatrix(rows, columns, NNZ1, matrix1);
-
-    cout<<endl<<"Enter Second matrix values:"<<endl;
-
-    int **matrix2 = new int*[rows];
-    readMatrix(rows, columns, NNZ2, matrix2);
-    
-    // Converting conventional matrices into sparse matrices
-    ArrayRep m1(rows, columns, NNZ1, matrix1);
-    ArrayRep m2(rows, columns, NNZ2, matrix2);
-    m1.toSparse();
-    m2.toSparse();
-    
-    ArrayOps ops;
-    int **result = ops.addition(m1, m2);
-    cout<<"Addition of two matrices:"<<endl;
-    displayMatrix(result, result[0][2]);
-}
-
-void multiplication(){
-    int rows1, columns1, rows2, columns2;
-    int NNZ1=0, NNZ2=0;
-
-    cout<<"Enter rows and columns of 1st matrix:";
-    cin>>rows1>>columns1;
-
-    cout<<endl<<"Enter First matrix values:"<<endl;
-
-    int **matrix1 = new int*[rows1];
-    readMatrix(rows1, columns1, NNZ1, matrix1);
-
-    cout<<"Enter rows and columns of 2nd matrix:";
-    cin>>rows2>>columns2;
-
-    cout<<endl<<"Enter Second matrix values:"<<endl;
-
-    int **matrix2 = new int*[rows2];
-    readMatrix(rows2, columns2, NNZ2, matrix2);
-
-    // Converting conventional matrices into sparse matrices
-    ArrayRep m1(rows1, columns1, NNZ1, matrix1);
-    ArrayRep m2(rows2, columns2, NNZ2, matrix2);
-    m1.toSparse();
-    m2.toSparse();
-
-    ArrayOps ops;
-    int **result = ops.multiplication(m1, m2);
-    cout<<"Mulitplication of two matrices:"<<endl;
-    displayMatrix(result, result[0][2]);    
-}
-
+template <class T>
 void transpose(){
     int rows, columns;
     int NNZ=0;
@@ -95,17 +38,19 @@ void transpose(){
 
     cout<<endl<<"Enter matrix values:"<<endl;
 
-    int **matrix = new int*[rows];
+    T **matrix = new T*[rows];
     readMatrix(rows, columns, NNZ, matrix);
 
-    ArrayRep m(rows, columns, NNZ, matrix);
-    m.toSparse();
-    m.display();
-    ArrayOps op;
-    int **result = op.transpose(m);
-    cout<<"Transpose of matrix:"<<endl;
-    displayMatrix(result, NNZ);
+    ArrayRep<T> m(rows, columns, NNZ, matrix);
+    // m.toSparse();
+    // m.display();
+
+    // ArrayOps<T> ops;
+    // T **result = ops.transpose(m);
+    // cout<<"Transpose of matrix:"<<endl;
+    displayMatrix(matrix, NNZ);
 }
+
 
 int main(){
 
@@ -118,18 +63,17 @@ int main(){
     cout<<"======================================================================="<<endl;
     cout<<endl;
 
-
     int option;
     cin>>option;
 
     if(option == 1){
-        addition();
+        // addition<double>();
     }
     else if(option == 2){
-        multiplication();
+        // multiplication<double>();
     }
     else if(option == 3){
-        transpose();
+        transpose<double>();
     }
     else{
         cout<<"Enter Valid option"<<endl;

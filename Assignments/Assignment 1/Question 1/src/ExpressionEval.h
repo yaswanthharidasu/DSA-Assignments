@@ -1,3 +1,6 @@
+#ifndef __EXPRESSIONEVAL__
+#define __EXPRESSIONEVAL__
+
 #include"BigInteger.h"
 #include"ExpressionStack.h"
 
@@ -20,5 +23,6 @@ class ExpressionEval{
     // 1. Convert infix to postfix expression
     // 2. Evaluate the postfix expression to obtain the result
     string evaluate(string input);
-
 };
+
+#endif

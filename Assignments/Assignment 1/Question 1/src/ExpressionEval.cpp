@@ -8,7 +8,7 @@ using namespace std;
 // *    ==> 1
 // +, - ==> 0
 int ExpressionEval :: precedence(string op){
-    if(op == "*")
+    if(op == "x")
         return 1;
     else
         return 0;
@@ -26,7 +26,7 @@ string ExpressionEval :: infixToPostfix(string input){
     postfixExp += '(';
 
     for(int i=0; i<input.size(); i++){
-        if(input[i] == '+' || input[i] == '-' || input[i] == '*'){
+        if(input[i] == '+' || input[i] == '-' || input[i] == 'x'){
             // Whenever we come across an operator it means we crossed an integer. Thus, close the bracket.
             postfixExp += ')';      
 
@@ -93,7 +93,7 @@ string ExpressionEval :: postfixEval(string expression){
             }
             operandStack.push(bigInteger.subtract(op2, op1));
         }
-        else if(expression[i] == '*'){
+        else if(expression[i] == 'x'){
             op1 = operandStack.pop();
             op2 = operandStack.pop();
             operandStack.push(bigInteger.multiply(op2, op1));
@@ -102,7 +102,6 @@ string ExpressionEval :: postfixEval(string expression){
             operand += expression[i];
         }
     }
-
     return operandStack.pop();
 }
 

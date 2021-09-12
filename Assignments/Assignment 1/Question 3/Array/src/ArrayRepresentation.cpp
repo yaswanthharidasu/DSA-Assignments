@@ -2,24 +2,26 @@
 #include<iostream>
 using namespace std;
 
-ArrayRep :: ArrayRep(int rows, int columns, int NNZ, int **matrix){
+template<class T>
+ArrayRep<T> :: ArrayRep(int rows, int columns, int NNZ, T **matrix){
     // cout<<"NNZ: "<<NNZ<<endl;
     this->matrix = matrix;  
     // Creating sparse matrix 
-    sparse = new int* [NNZ+1];
+    sparse = new T* [NNZ+1];
     for(int i=0; i<NNZ+1; i++)
-        sparse[i] = new int[3];
+        sparse[i] = new T[3];
 
     // First row of sparse stores #rows, #cols, #NNZ vals
-    sparse[0][0] = rows;
-    sparse[0][1] = columns;
-    sparse[0][2] = NNZ;
+    sparse[0][0] = (int)rows;
+    sparse[0][1] = (int)columns;
+    sparse[0][2] = (int)NNZ;
     
     // Creating an array of size "columns" to stores no.of elements in each column
     colCount = new int[columns]{0};
 }
 
-void ArrayRep :: toSparse(){
+template<class T>
+void ArrayRep<T> :: toSparse(){
     // cout<<"In to sparse"<<endl;
     // index of sparse matrix
     int k = 1;
@@ -44,7 +46,8 @@ void ArrayRep :: toSparse(){
     // cout<<"End to sparse"<<endl;
 }
 
-void ArrayRep :: display(){
+template<class T>
+void ArrayRep<T> :: display(){
     cout<<"========================================="<<endl;
     cout<<"Triplet representation of Sparse matrix: "<<endl;
     cout<<"========================================="<<endl;

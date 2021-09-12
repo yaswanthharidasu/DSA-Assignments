@@ -2,7 +2,8 @@
 #include<iostream>
 using namespace std;
 
-void displayMatrix1(int **matrix, int NNZ){
+template<class T>
+void displayMatrix1(T **matrix, int NNZ){
     cout<<"========================================="<<endl;
     cout<<"Triplet representation of Sparse matrix: "<<endl;
     cout<<"========================================="<<endl;
@@ -14,9 +15,10 @@ void displayMatrix1(int **matrix, int NNZ){
     cout<<"-----------------------------------------"<<endl;
 }
 
-int** ArrayOps :: addition(ArrayRep mat1, ArrayRep mat2){
-    int **m1 = mat1.sparse;
-    int **m2 = mat2.sparse;
+template<class T>
+T** ArrayOps<T> :: addition(ArrayRep<T> mat1, ArrayRep<T> mat2){
+    T **m1 = mat1.sparse;
+    T **m2 = mat2.sparse;
 
     if((m1[0][0] != m2[0][0]) || (m1[0][1] != m2[0][1])){
         cout<<"Rows and columns are not same. Matrices cannot be added"<<endl;
@@ -28,9 +30,9 @@ int** ArrayOps :: addition(ArrayRep mat1, ArrayRep mat2){
 
     int maxNNZ = NNZ1+NNZ2;
     // Result matrix 
-    int **result = new int* [maxNNZ+1];
+    T **result = new T* [maxNNZ+1];
     for(int i=0; i<maxNNZ+1; i++)
-        result[i] = new int[3];
+        result[i] = new T[3];
 
     result[0][0] = rows;
     result[0][1] = columns;
@@ -40,7 +42,7 @@ int** ArrayOps :: addition(ArrayRep mat1, ArrayRep mat2){
     while(i < NNZ1+1 && j < NNZ2+1){
         // Row and column are same in both matrices
         if((m1[i][0] == m2[j][0]) && (m1[i][1] == m2[j][1])){
-            int sum = m1[i][2] + m2[j][2];
+            T sum = m1[i][2] + m2[j][2];
             if(sum != 0){
                 result[k][0] = m1[i][0];
                 result[k][1] = m1[i][1];
@@ -79,18 +81,16 @@ int** ArrayOps :: addition(ArrayRep mat1, ArrayRep mat2){
     return result;
 }
 
-int** ArrayOps :: multiplication(ArrayRep mat1, ArrayRep mat2){
+template<class T>
+T** ArrayOps<T> :: multiplication(ArrayRep<T> mat1, ArrayRep<T> mat2){
     
-    int **m1 = mat1.sparse;
-    int **m2T = transpose(mat2);
-
-    // displayMatrix1(m1, m1[0][2]);
-    // displayMatrix1(m2T, m2T[0][2]);
+    T **m1 = mat1.sparse;
+    T **m2T = transpose(mat2);
 
     int NNZ1 = m1[0][2], NNZ2 = m2T[0][2];
 
-    int **result = new int*[NNZ1*NNZ2 + 1];
-    result[0] = new int[3];
+    T **result = new T*[NNZ1*NNZ2 + 1];
+    result[0] = new T[3];
 
     result[0][0] = m1[0][0];
     result[0][1] = m2T[0][0];
@@ -102,48 +102,47 @@ int** ArrayOps :: multiplication(ArrayRep mat1, ArrayRep mat2){
         int r = m1[i][0];
         while(j <= NNZ2){
             int c = m2T[j][0];
-            temp_i = i;
-            temp_j = j;
-            int sum = 0;
-            while(temp_i < NNZ1 && m1[temp_i][0] == r && temp_j < NNZ2 && m2T[j][0] == c){
-                if(m1[temp_i][1] < m2T[temp_j][1])
-                    temp_i++;
-                else if(m1[temp_i][1] < m2T[temp_j][1])
-                    temp_j++;
-                else{
+            temp_i = i, temp_j = j;
+            T sum = 0;
+            
+            while(temp_i <= NNZ1 && m1[temp_i][0] == r && temp_j <= NNZ2 && m2T[temp_j][0] == c){
+                if(m1[temp_i][1] == m2T[temp_j][1]){
                     sum += m1[temp_i][2] * m2T[temp_j][2];
                     temp_i++, temp_j++;
                 }
+                else if(m1[temp_i][1] < m2T[temp_j][1])
+                    temp_i++;
+                else
+                    temp_j++;
             }
             if(sum != 0){
-                result[k] = new int[3];
+                result[k] = new T[3];
                 result[k][0] = r;
                 result[k][1] = c;
                 result[k][2] = sum;
                 k++;
             }
-            while(temp_j < NNZ2 && m2T[temp_j][0] == c)
-                temp_j++;
-            j++;
+            while(j <= NNZ2 && m2T[j][0] == c)
+                j++;
         }
-        while(temp_i < NNZ1 && m1[temp_i][0] == r)
-            temp_i++;
-        i++;
+        while(i <= NNZ1 && m1[i][0] == r)
+            i++;    
     }
     result[0][2] = k-1;
 
     return result;
 }
 
-int**  ArrayOps :: transpose(ArrayRep mat){
-    int **m = mat.sparse;
+template<class T>
+T**  ArrayOps<T> :: transpose(ArrayRep<T> mat){
+    T **m = mat.sparse;
     int *colCount = mat.colCount;
 
     int rows = m[0][0], columns = m[0][1], NNZ = m[0][2];
     // Result matrix 
-    int **result = new int* [NNZ+1];
+    T **result = new T* [NNZ+1];
     for(int i=0; i<NNZ+1; i++)
-        result[i] = new int[3];
+        result[i] = new T[3];
 
     result[0][0] = columns;
     result[0][1] = rows;

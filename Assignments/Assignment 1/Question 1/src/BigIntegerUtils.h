@@ -1,3 +1,6 @@
+#ifndef __BIGINTEGERUTILS__
+#define __BIGINTEGERUTILS__
+
 #include<string>
 #include"BigInteger.h"
 
@@ -9,3 +12,4 @@ class BigIntegerUtils{
     string GCD(string num1, string num2);
 };
 
+#endif

@@ -1,7 +1,7 @@
 #include<string>
 #include<iostream>
 using namespace std;
-typedef long long ll;
+typedef long long int ll;
 
 // ================================================ Class Node: Begin ================================================================================
 class Node
@@ -21,6 +21,7 @@ Node :: Node(string token){
 // ================================================ Class Node: End ==================================================================================
 
 // ================================================ Class Big Integer: End ===========================================================================
+
 class BigInteger{
 
     public:
@@ -34,7 +35,11 @@ class BigInteger{
     string multiply(string op1, string op2);
 
     // Performs exponentiation
-    string exponentiation(string base, long long int exp);
+    string exponentiation(string base, ll exp);
+
+    // Performs num % mod
+    string modulo(string num, string mod);
+
 };
 
 // Performs addition of two integers which are provided as strings
@@ -80,7 +85,6 @@ string BigInteger :: add(string op1, string op2){
     result = string(result.rbegin(), result.rend());
 
     return result;
-
 }
 
 // Performs subtraction of two integers which are provided as strings
@@ -145,18 +149,21 @@ string BigInteger :: multiply(string op1, string op2){
         op1 = op2;
         op2 = temp;
     }
-
     // The result can atmost of size op1.length()+op2.length()
     // Hence create a string 'result' of size op1.length()+op2.length()
     string result(op1.length()+op2.length(), 0);
 
     for(ll i=op2.length()-1; i>=0; i--){
         for(ll j=op1.length()-1; j>=0; j--){
+            int num1 = op1[j]-'0', num2 = op2[i]-'0';
+            int ans = num1 * num2;
             // Adding result[i+j+1] if there exists carry
-            ll val = (op2[i]-'0')*(op1[j]-'0') + result[i+j+1];
-            // Storing the carry 
-            result[i+j] += val/10;
-            result[i+j+1] = val%10;
+            ans += result[i+j+1];
+            // Ans can be atmost of two digits. Hence, LSD is the result and MSD is the carry
+            // Storing the carry for the next digit
+            result[i+j] += ans/10;
+            // Storing the value
+            result[i+j+1] = ans%10;
         }
     }
 
@@ -178,10 +185,35 @@ string BigInteger :: exponentiation(string base, long long int exp){
             result = multiply(result, base);
         }
         base = multiply(base, base);
-        cout<<base<<endl;
         exp = exp>>1;
     }
     return result;
+}
+
+// Performs num % mod
+string BigInteger :: modulo(string num, string mod){
+// Performing modulo by doubling the mod value until it is smaller than num
+// Whenever the max value of mod is reached then subtract it from the num 
+// Then again repeat the process.
+// The doubled values are stored in the form of Linked list inorder to avoid calculating again
+    Node *head = new Node(mod);
+    string currentMod = mod;
+
+    while(num.length() > currentMod.length() || (num.length() == currentMod.length() && num.compare(currentMod) > 0)){
+        Node *twice = new Node(multiply(head->current, "2"));
+        currentMod = twice->current;
+        twice->next = head;
+        head = twice;
+    }
+    // After reaching the max value of mod, do subtraction
+    while(head!=NULL){
+        if(num.length() < head->current.length() || (num.length() == head->current.length() && head->current.compare(num) > 0))
+            head = head->next;
+        else{
+            num = subtract(num, head->current);
+        }
+    }
+    return num;
 }
 
 // ================================================ Class BigInteger: End ============================================================================
@@ -190,14 +222,14 @@ string BigInteger :: exponentiation(string base, long long int exp){
 
 class BigIntegerUtils{
     public:
+    // Performs factorial of input
     string factorial(string input);
+    // Performs GCD of num1 and num2
     string GCD(string num1, string num2);
 };
 
 string BigIntegerUtils :: factorial(string input){
-
     BigInteger bigInteger;
-
     string op1, op2;
     op1 = input;
     op2 = bigInteger.subtract(op1, "1");
@@ -206,12 +238,10 @@ string BigIntegerUtils :: factorial(string input){
         op1 = bigInteger.multiply(op1, op2);
         op2 = bigInteger.subtract(op2, "1");
     }
-
     return op1;
 }
 
 string BigIntegerUtils :: GCD(string num1, string num2){
-    
     BigInteger bigInteger;
     string gcd;
     if(num1 == "0"){
@@ -223,13 +253,9 @@ string BigIntegerUtils :: GCD(string num1, string num2){
             gcd = num1;
             break;
         }
-        if((num1.length() > num2.length()) || (num1.length() == num2.length() && num1.compare(num2) > 0)){
-            num1 = bigInteger.subtract(num1, num2);
-        }
-        // num1 < num2
-        else{
-            num2 = bigInteger.subtract(num2, num1); 
-        }
+        string ab = bigInteger.modulo(num1, num2);
+        num1 = num2;
+        num2 = ab;
     }
     return gcd;
 }
@@ -268,8 +294,7 @@ class ExpressionStack{
     void printStack();
 
     // Removes all elements from the stack
-    void clearStack();
-    
+    void clearStack();  
 };
 
 // Constructor which intializes head to NULL
@@ -386,7 +411,7 @@ class ExpressionEval{
 // *    ==> 1
 // +, - ==> 0
 int ExpressionEval :: precedence(string op){
-    if(op == "*")
+    if(op == "x")
         return 1;
     else
         return 0;
@@ -404,7 +429,7 @@ string ExpressionEval :: infixToPostfix(string input){
     postfixExp += '(';
 
     for(int i=0; i<input.size(); i++){
-        if(input[i] == '+' || input[i] == '-' || input[i] == '*'){
+        if(input[i] == '+' || input[i] == '-' || input[i] == 'x'){
             // Whenever we come across an operator it means we crossed an integer. Thus, close the bracket.
             postfixExp += ')';      
 
@@ -428,8 +453,6 @@ string ExpressionEval :: infixToPostfix(string input){
     while(!operatorStack.empty()){
         postfixExp += operatorStack.pop();
     }
-    
-    // printString(postfixExp);
 
     return postfixExp;
 }
@@ -458,9 +481,6 @@ string ExpressionEval :: postfixEval(string expression){
         else if(expression[i] == '-'){
             op1 = operandStack.pop();
             op2 = operandStack.pop();
-            // Need to perfrom op2-op1
-            // if op1.length() > op2.length() then it means op1 is greater than op2 hence negative number in intermediate output
-            // if op1.length() == op2.length() then there may be cases where op1 is greater than op2
             if(op1.length()>op2.length()){
                 cout<<"Negative integer occured in the expression"<<endl;
                 return "-1";
@@ -471,7 +491,7 @@ string ExpressionEval :: postfixEval(string expression){
             }
             operandStack.push(bigInteger.subtract(op2, op1));
         }
-        else if(expression[i] == '*'){
+        else if(expression[i] == 'x'){
             op1 = operandStack.pop();
             op2 = operandStack.pop();
             operandStack.push(bigInteger.multiply(op2, op1));
@@ -480,44 +500,91 @@ string ExpressionEval :: postfixEval(string expression){
             operand += expression[i];
         }
     }
-
     return operandStack.pop();
 }
 
 string ExpressionEval :: evaluate(string input){
     string postfix = infixToPostfix(input);
-    cout<<"postfix:"<<postfix<<endl;
     string result = postfixEval(postfix);
     return result;
 }
 
 // ================================================ Class ExpressionEval: End ========================================================================
 
-// ================================================ main() ===========================================================================================
+// ================================================ Driver Code: main() ==============================================================================
+
+void exponentiation(){
+    string num, result;
+    long long int exp;
+    cout<<"Enter number and exponent:"<<endl;
+    cin.ignore();
+    getline(cin, num);  
+    cin>>exp;
+    BigInteger bigInteger;
+    result = bigInteger.exponentiation(num, exp);
+    cout<<"Ans: "<<endl;
+    cout<<result<<endl;
+}
+
+void GCD(){
+    string num1, num2, result;
+    cout<<"Enter two numbers:"<<endl;
+    cin.ignore();
+    getline(cin, num1);
+    getline(cin, num2);
+    BigIntegerUtils utils;
+    result = utils.GCD(num1, num2);
+    cout<<"GCD: "<<endl;
+    cout<<result<<endl;
+}
+
+void factorial(){
+    string num, result;
+    cout<<"Enter number:"<<endl;
+    cin.ignore();
+    getline(cin, num);
+    BigIntegerUtils utils;
+    result = utils.factorial(num);
+    cout<<"Factorial: "<<endl;
+    cout<<result<<endl;
+}
+
+void calculator(){
+    string expression, result;
+    cout<<"Enter expression:"<<endl;
+    cin.ignore();
+    getline(cin, expression);
+    ExpressionEval eval;
+    result = eval.evaluate(expression);
+    cout<<"Ans: "<<endl;
+    cout<<result<<endl;
+}
 
 int main(){
+    cout<<"======================================================================="<<endl;
+    cout<<"Available options:"<<endl;
+    cout<<"-----------------------------------------------------------------------"<<endl;
+    cout<<"1. Exponentiation"<<endl;
+    cout<<"2. GCD"<<endl;
+    cout<<"3. Factorial"<<endl;
+    cout<<"4. Calculator"<<endl;
+    cout<<"======================================================================="<<endl;
+    cout<<endl;
 
-    cout<<"Enter expression: ";
+    int option;
+    cout<<"Select an option:";
+    cin>>option;
 
-    string input;
-    getline(cin, input);
-
-    ExpressionEval expEval;
-
-    string result = expEval.evaluate(input);
-
-    cout<<"Result: "<<endl;
-    cout<<result<<endl;
-
-    // string num1 = "1042895339958367383993838393393977585594920009764434";
-    // string num2 = "4356345343435545343434234453556645343423232";
-
-    // BigIntegerUtils utils;
-
-    // cout<<"GCD Result: "<<endl;
-    // cout<<utils.GCD(num1, num2)<<endl;
-
+    if(option == 1)
+        exponentiation();
+    else if(option == 2)
+        GCD();
+    else if(option == 3)
+        factorial();
+    else if(option == 4)
+        calculator();
+    else
+        cout<<"Select valid option"<<endl;
     return 0;
 }
 
-// ====================================================== END ========================================================================================

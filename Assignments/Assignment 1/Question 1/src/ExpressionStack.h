@@ -1,4 +1,6 @@
-#include<iostream>
+#ifndef __EXPRESSIONSTACK__
+#define __EXPRESSIONSTACK__
+
 #include"Node.h"
 
 using namespace std;
@@ -34,5 +36,5 @@ class ExpressionStack{
 
     // Removes all elements from the stack
     void clearStack();
-    
 };
+#endif

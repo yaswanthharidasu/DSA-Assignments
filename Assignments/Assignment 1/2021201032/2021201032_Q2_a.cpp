@@ -4,7 +4,7 @@ using namespace std;
 
 // ================================================ Class LRUNode: Begin =============================================================================
 
-// LRUNode of Doubly linked list
+// Node of Doubly linked list
 class LRUNode{
     public:
     int key;
@@ -78,20 +78,23 @@ void LRUCache :: removeNode(LRUNode *deleteNode){
 
 // Inserts new key value pair in the cache
 void LRUCache :: set(int key, int value){
+    if(capacity == 0)
+        return ;
     // If key is already present then deleted corresponding node from DLL and bring that node to the first as it will be the Least recently used. 
     // Instead of bringing the node to the first, delete that node and insert at the first  
     if(hashtable.count(key) == 1){
         LRUNode *present = hashtable[key];
         removeNode(present);
     }
-    // Not present and if capacity is exceeded then remove the last node from DLL and its corresponding key from hashtable
+    // If key is not present and if capacity is exceeded then remove the last node from DLL and its corresponding key from hashtable
     else if(hashtable.size() == capacity){
         // Last node is obtained using previous pointer of tail
         LRUNode *deleteNode = tail->prev;
         // Key to be deleted from the hashtable
         int deleteKey = deleteNode->key;
-
+        // Deleting the key in DLL
         removeNode(deleteNode);
+        // Deleting the key in hashtable
         hashtable.erase(deleteKey);
     }
 
@@ -125,7 +128,7 @@ int LRUCache :: get(int key){
 
 // ================================================ Class LRUCache: End ==============================================================================
 
-// ================================================ main() ===========================================================================================
+// ================================================ Driver code: main() ==============================================================================
 
 int main(){
     cout<<"Enter Capacity of cache:";

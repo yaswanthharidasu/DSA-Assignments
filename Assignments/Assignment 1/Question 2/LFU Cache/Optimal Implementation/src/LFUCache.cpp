@@ -1,7 +1,6 @@
 #include"LFUCache.h"
 using namespace std;
 
-
 LFUCache :: LFUCache(int capacity){
     this->capacity = capacity;
     freqHead = new FrequencyNode(0);
@@ -21,13 +20,11 @@ void LFUCache :: insertNode(T *node, T *head){
     node->next->prev = node;
 }
 
-
 template <class T>
 void LFUCache :: removeNode(T *node){
     node->prev->next = node->next;
     node->next->prev = node->prev;
 }
-
 
 void LFUCache :: keyPresent(KeyNode *nKey, FrequencyNode *nFreq){
     int currentFrequency = nFreq->frequency;
