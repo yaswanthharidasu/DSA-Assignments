@@ -148,8 +148,10 @@ Node<T>* LLOps<T> :: alreadyPresent(Node<T> *head, int row, int column){
 template <class T>
 Node<T>* LLOps<T> :: addition(LinkedList<T> mat1, LinkedList<T> mat2){
     Node<T> *m1 = mat1.head, *m2 = mat2.head;
-    if(m1->row != m2->row || m1->column != m2->column)
-        return NULL;
+    if(m1->row != m2->row || m1->column != m2->column){
+        cout<<"No.of rows and columns are not same. Addition not possible"<<endl;
+        exit(0);
+    }
 
     Node<T> *result = new Node<T>(m1->row, m1->column, 0); 
 
@@ -212,10 +214,12 @@ template <class T>
 Node<T>* LLOps<T> :: multiplication(LinkedList<T> mat1, LinkedList<T> mat2){
     Node<T> *m1 = mat1.head;
     Node<T> *m2 = mat2.head;
+
     if(m1->column != m2->row){
         cout<<"Multiplication not possible"<<endl;
-        return NULL;
+        exit(0);
     }       
+    
     Node<T> *result = new Node<T>(m1->row, m2->column, 0);
     Node<T> *tempOne = m1->next, *tempTwo = m2->next, *tempResult = result;
     int NNZ = 0;    
@@ -277,24 +281,27 @@ void displayMatrix(Node<T> *head){
 
 template<class T>
 void addition(){
-    int rows, columns;
+    int rows1, columns1, rows2, columns2;
     int NNZ1=0, NNZ2=0;
 
-    cout<<"Enter no.of rows and columns:";
-    cin>>rows>>columns;
+    cout<<"Enter no.of rows and columns of 1st matrix:";
+    cin>>rows1>>columns1;
 
     cout<<endl<<"Enter First matrix values:"<<endl;
 
-    T **matrix1 = new T*[rows];
-    readMatrix(rows, columns, NNZ1, matrix1);
+    T **matrix1 = new T*[rows1];
+    readMatrix(rows1, columns1, NNZ1, matrix1);
+
+    cout<<"Enter no.of rows and columns of 1st matrix:";
+    cin>>rows2>>columns2;
 
     cout<<endl<<"Enter Second matrix values:"<<endl;
 
-    T **matrix2 = new T*[rows];
-    readMatrix(rows, columns, NNZ2, matrix2);
+    T **matrix2 = new T*[rows2];
+    readMatrix(rows2, columns2, NNZ2, matrix2);
     
-    LinkedList<T> m1(rows, columns, NNZ1, matrix1);
-    LinkedList<T> m2(rows, columns, NNZ2, matrix2);
+    LinkedList<T> m1(rows1, columns1, NNZ1, matrix1);
+    LinkedList<T> m2(rows2, columns2, NNZ2, matrix2);
     
     m1.toSparse();
     m2.toSparse();
@@ -335,6 +342,9 @@ void multiplication(){
 
     LLOps<T> ops;
     Node<T> *result = ops.multiplication(m1, m2);
+
+    cout<<"Multiplication of matrices:"<<endl;
+    
     displayMatrix(result);
 }
 
@@ -356,6 +366,9 @@ void transpose(){
 
     LLOps<T> ops;
     Node<T> *result = ops.transpose(m);
+
+    cout<<"Transpose of matrix:"<<endl;
+    
     displayMatrix(result);
 }
 

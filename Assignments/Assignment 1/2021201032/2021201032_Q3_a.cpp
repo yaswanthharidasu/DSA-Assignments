@@ -134,12 +134,17 @@ T** ArrayOps<T> :: addition(ArrayRep<T> mat1, ArrayRep<T> mat2){
 template<class T>
 T** ArrayOps<T> :: multiplication(ArrayRep<T> mat1, ArrayRep<T> mat2){
     
+    if(mat1.sparse[0][1] != mat2.sparse[0][0]){
+        cout<<"Multiplication not possible"<<endl;
+        exit(0);
+    }
+
     T **m1 = mat1.sparse;
     T **m2T = transpose(mat2);
 
     int NNZ1 = m1[0][2], NNZ2 = m2T[0][2];
 
-    T **result = new T*[NNZ1*NNZ2 + 1];
+    T **result = new T*[250000];
     result[0] = new T[3];
 
     result[0][0] = m1[0][0];
@@ -259,7 +264,6 @@ void transpose(){
 
     ArrayRep<T> m(rows, columns, NNZ, matrix);
     m.toSparse();
-    m.display();
 
     ArrayOps<T> ops;
     T **result = ops.transpose(m);
@@ -269,31 +273,36 @@ void transpose(){
 
 template <class T>
 void addition(){
-    int rows, columns;
+    int rows1, columns1, rows2, columns2;
     int NNZ1=0, NNZ2=0;
 
-    cout<<"Enter no.of rows and columns:";
-    cin>>rows>>columns;
+    cout<<"Enter no.of rows and columns of 1st matrix:";
+    cin>>rows1>>columns1;
 
     cout<<endl<<"Enter First matrix values:"<<endl;
 
-    T **matrix1 = new T*[rows];
-    readMatrix(rows, columns, NNZ1, matrix1);
+    T **matrix1 = new T*[rows1];
+    readMatrix(rows1, columns1, NNZ1, matrix1);
+
+    cout<<"Enter rows and columns of 2nd matrix:";
+    cin>>rows2>>columns2;
 
     cout<<endl<<"Enter Second matrix values:"<<endl;
 
-    T **matrix2 = new T*[rows];
-    readMatrix(rows, columns, NNZ2, matrix2);
+    T **matrix2 = new T*[rows2];
+    readMatrix(rows2, columns2, NNZ2, matrix2);
     
     // Converting conventional matrices into sparse matrices
-    ArrayRep<T> m1(rows, columns, NNZ1, matrix1);
-    ArrayRep<T> m2(rows, columns, NNZ2, matrix2);
+    ArrayRep<T> m1(rows1, columns1, NNZ1, matrix1);
+    ArrayRep<T> m2(rows2, columns2, NNZ2, matrix2);
     m1.toSparse();
     m2.toSparse();
     
     ArrayOps<T> ops;
     T **result = ops.addition(m1, m2);
+
     cout<<"Addition of two matrices:"<<endl;
+
     displayMatrix(result, result[0][2]);
 }
 

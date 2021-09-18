@@ -503,6 +503,7 @@ string ExpressionEval :: postfixEval(string expression){
     return operandStack.pop();
 }
 
+// Returns the result of given arithmetic expression
 string ExpressionEval :: evaluate(string input){
     string postfix = infixToPostfix(input);
     string result = postfixEval(postfix);
@@ -516,42 +517,35 @@ string ExpressionEval :: evaluate(string input){
 void exponentiation(){
     string num, result;
     long long int exp;
-    cout<<"Enter number and exponent:"<<endl;
-    cin.ignore();
-    getline(cin, num);  
-    cin>>exp;
+    cin>>num>>exp;
     BigInteger bigInteger;
     result = bigInteger.exponentiation(num, exp);
-    cout<<"Ans: "<<endl;
+    // cout<<"Ans: "<<endl;
     cout<<result<<endl;
 }
 
 void GCD(){
     string num1, num2, result;
-    cout<<"Enter two numbers:"<<endl;
-    cin.ignore();
-    getline(cin, num1);
-    getline(cin, num2);
+    cin>>num1>>num2;
     BigIntegerUtils utils;
     result = utils.GCD(num1, num2);
-    cout<<"GCD: "<<endl;
+    // cout<<"GCD: "<<endl;
     cout<<result<<endl;
 }
 
 void factorial(){
     string num, result;
-    cout<<"Enter number:"<<endl;
-    cin.ignore();
-    getline(cin, num);
+    // cout<<"Enter number:"<<endl;
+    cin>>num;
     BigIntegerUtils utils;
     result = utils.factorial(num);
-    cout<<"Factorial: "<<endl;
+    // cout<<"Factorial: "<<endl;
     cout<<result<<endl;
 }
 
 void calculator(){
     string expression, result;
-    cout<<"Enter expression:"<<endl;
+    // cout<<"Enter expression:"<<endl;
     cin.ignore();
     getline(cin, expression);
     ExpressionEval eval;
@@ -572,7 +566,7 @@ int main(){
     cout<<endl;
 
     int option;
-    cout<<"Select an option:";
+    // cout<<"Select an option:";
     cin>>option;
 
     if(option == 1)
@@ -583,8 +577,6 @@ int main(){
         factorial();
     else if(option == 4)
         calculator();
-    else
-        cout<<"Select valid option"<<endl;
     return 0;
 }
 
