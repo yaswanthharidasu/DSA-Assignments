@@ -69,7 +69,6 @@ template<class T>
 T** ArrayOps<T> :: addition(ArrayRep<T> mat1, ArrayRep<T> mat2){
     T **m1 = mat1.sparse;
     T **m2 = mat2.sparse;
-
     if((m1[0][0] != m2[0][0]) || (m1[0][1] != m2[0][1])){
         cout<<"Rows and columns are not same. Matrices cannot be added"<<endl;
         exit(0);
