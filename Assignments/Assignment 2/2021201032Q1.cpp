@@ -1,4 +1,7 @@
-#include <iostream>
+#include<iostream>
+#include<string>
+#include<typeinfo>
+
 using namespace std;
 
 template <class T>
@@ -25,10 +28,24 @@ Node<T>::Node(T val) {
     leftSubtreeCount = 0;
 }
 
+// template<class T>
+// void compare(){
+
+// }
+//     bool operator()(const C& a, const C& b)
+//     {
+//         if (a < b) {
+//             return true;
+//         }
+//         return false;
+//     }
+
 template <class T>
 class AVL {
    public:
+
     Node<T> *root;
+
     int size;
     // Constructor
     AVL();
@@ -67,8 +84,7 @@ class AVL {
 
     // Closest value
     T closestValue(T val);
-    void closestValueHelper(Node<T> *root, T val, T &ans, int &minAns,
-                            bool &ansFound);
+    void closestValueHelper(Node<T> *root, T val, T &ans, int &minAns, bool &ansFound);
 
     // KthLargest
     T KthLargest(int k);
@@ -80,7 +96,6 @@ class AVL {
     void leftInterval(Node<T> *root, T a, int &leftIntervalCount);
     // Find right Interval
     void rightInterval(Node<T> *root, T b, int &rightIntervalCount);
-
 };
 
 template <class T>
@@ -397,8 +412,7 @@ T AVL<T>::closestValue(T val) {
 }
 
 template <class T>
-void AVL<T>::closestValueHelper(Node<T> *root, T val, T &ans, int &minAns,
-                                bool &ansFound) {
+void AVL<T>::closestValueHelper(Node<T> *root, T val, T &ans, int &minAns, bool &ansFound) {
     if (root == NULL) {
         return;
     }
@@ -437,8 +451,7 @@ T AVL<T>::KthLargest(int k) {
 }
 
 template <class T>
-Node<T> *AVL<T>::KthLargestHelper(Node<T> *root, int k, int &treeSize,
-                                  int &leftElements) {
+Node<T> *AVL<T>::KthLargestHelper(Node<T> *root, int k, int &treeSize, int &leftElements) {
     int rightSubtreeCount = treeSize - root->leftSubtreeCount - leftElements;
     if (rightSubtreeCount + 1 == k) {
         return root;
@@ -459,19 +472,19 @@ template <class T>
 int AVL<T>::range(T a, T b) {
     int leftIntervalCount = 0;
     int rightIntervalCount = 0;
-    leftInterval(root, a, leftIntervalCount) ;
+    leftInterval(root, a, leftIntervalCount);
     rightInterval(root, b, rightIntervalCount);
     return rightIntervalCount - leftIntervalCount;
 }
 
 template <class T>
 void AVL<T>::leftInterval(Node<T> *root, T val, int &leftIntervalCount) {
-    if (root == NULL) return ;
+    if (root == NULL) return;
     if (root->value == val) {
         // ans = root->value;
         leftIntervalCount += (root->leftSubtreeCount - root->frequency);
     } else if (val < root->value) {
-        if(root->left == NULL)
+        if (root->left == NULL)
             leftIntervalCount += root->leftSubtreeCount - root->frequency;
         else
             leftInterval(root->left, val, leftIntervalCount);
@@ -483,16 +496,19 @@ void AVL<T>::leftInterval(Node<T> *root, T val, int &leftIntervalCount) {
 
 template <class T>
 void AVL<T>::rightInterval(Node<T> *root, T val, int &rightIntervalCount) {
-    if (root == NULL) return ;
+    if (root == NULL) 
+        return;
     if (root->value == val) {
         // ans = root->value;
         rightIntervalCount += (root->leftSubtreeCount);
-    } else if (val < root->value) {
-        if(root->left == NULL)
-            return ;
+    }
+    else if (val < root->value) {
+        if (root->left == NULL)
+            return;
         else
             rightInterval(root->left, val, rightIntervalCount);
-    } else {
+    } 
+    else {
         rightIntervalCount += root->leftSubtreeCount;
         rightInterval(root->right, val, rightIntervalCount);
     }
@@ -502,12 +518,12 @@ void AVL<T>::rightInterval(Node<T> *root, T val, int &rightIntervalCount) {
 // ===============================================================================
 
 int main() {
-    AVL<int> tree;
+    AVL<string> tree;
     int option;
-    int val;
-    int a,b;
-    cout << "================================================================"
-         << endl;
+    int k;
+    string val;
+    string a, b;
+    cout << "================================================================" << endl;
     cout << "Available options:" << endl;
     cout << "1.Insert" << endl;
     cout << "2.Delete" << endl;
@@ -519,9 +535,8 @@ int main() {
     cout << "8.Kth largest" << endl;
     cout << "9.Range" << endl;
     cout << "10.Inorder traversal" << endl;
-    cout << "================================================================"
-         << endl;
-
+    cout << "================================================================" << endl;
+    
     while (true) {
         // cout << "Enter option: ";
         cin >> option;
@@ -547,11 +562,11 @@ int main() {
             cin >> val;
             cout << "Closest value: " << tree.closestValue(val);
         } else if (option == 8) {
-            cin >> val;
-            cout << "Kth Largest: " << tree.KthLargest(val) << endl;
+            cin >> k;
+            cout << "Kth Largest: " << tree.KthLargest(k) << endl;
         } else if (option == 9) {
-            cin>>a>>b;
-            cout<<"Range: "<<tree.range(a, b)<<endl;
+            cin >> a >> b;
+            cout << "Range: " << tree.range(a, b) << endl;
         } else if (option == 10) {
             tree.inorderTraversal(tree.root);
             cout << endl;

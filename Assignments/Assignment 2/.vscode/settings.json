@@ -1,9 +1,10 @@
 {
-    "files.associations": {
-        "ostream": "cpp",
-        "queue": "cpp",
-        "stl_queue.h": "c",
-        "type_traits": "c",
-        "set": "cpp"
-    }
+	"files.associations": {
+		"ostream": "cpp",
+		"queue": "cpp",
+		"stl_queue.h": "c",
+		"type_traits": "c",
+		"set": "cpp",
+		"iostream": "cpp"
+	}
 }
