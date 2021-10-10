@@ -1,6 +1,6 @@
 #include<iostream>
 #include<string>
-#include<typeinfo>
+#include<utility>
 
 using namespace std;
 
@@ -28,17 +28,69 @@ Node<T>::Node(T val) {
     leftSubtreeCount = 0;
 }
 
-// template<class T>
-// void compare(){
-
-// }
-//     bool operator()(const C& a, const C& b)
-//     {
-//         if (a < b) {
+// class Rectangle{
+// public:
+// 	int l,b;
+// 	Rectangle(){
+// 		l = 10;
+// 		b = 20;
+// 	}
+// 	Rectangle(int length,int breadth){
+// 		l = length;
+// 		b = breadth;
+// 	}
+// 	bool operator <(Rectangle obj){
+// 		if(l < obj.l)
+// 			return true;
+//         else if(l == obj.l && b < obj.b)
 //             return true;
-//         }
-//         return false;
+//         else
+//             return false;
+// 	}
+// 	bool operator >(Rectangle obj){
+// 		if(l > obj.l )
+// 			return true;
+//         else if(l == obj.l && b > obj.b)
+//             return true;
+//         else
+//             return false;
+// 	}
+// 	bool operator ==(Rectangle obj){
+// 		return (l == obj.l && b == obj.b);
+// 	}
+//     int operator -(Rectangle obj){
+//         return l - obj.l;
 //     }
+// };
+
+class Square{
+public:
+	int s;
+	Square(){
+        s = 10;
+	}
+	Square(int length){
+        s = length;
+	}
+	bool operator <(Square obj){
+		if(s < obj.s)
+			return true;
+        else
+            return false;
+	}
+	bool operator >(Square obj){
+		if(s > obj.s)
+			return true;
+        else
+            return false;
+	}
+	bool operator ==(Square obj){
+		return s == obj.s;
+	}
+    int operator -(Square obj){
+        return s - obj.s;
+    }
+};
 
 template <class T>
 class AVL {
@@ -129,6 +181,11 @@ void AVL<T>::inorderTraversal(Node<T> *root) {
     for (int i = 0; i < root->frequency; i++) {
         cout << "(" << root->value << "," << root->frequency << ","
              << root->height << ", LSCt: " << root->leftSubtreeCount << "), ";
+        // cout << "(" << root->value.s << "," << root->frequency << ","
+        //      << root->height << ", LSCt: " << root->leftSubtreeCount << "), ";
+        // cout << "(" << root->value.l <<" "<< root->value.b << "," << root->frequency << ","
+        //      << root->height << ", LSCt: " << root->leftSubtreeCount << "), ";
+
     }
     inorderTraversal(root->right);
 }
@@ -231,7 +288,6 @@ Node<T> *AVL<T>::insertHelper(Node<T> *root, T val) {
         root->right = rightRotate(root->right);
         return leftRotate(root);
     }
-
     return root;
 }
 
@@ -334,7 +390,8 @@ template <class T>
 Node<T> *AVL<T>::searchHelper(Node<T> *root, T val) {
     if (root == NULL) {
         cout << "Not found" << endl;
-        return new Node<T>(-1);
+        static T defaultValue;
+        return new Node<T>(defaultValue);
     }
     if (root->value == val)
         return root;
@@ -365,7 +422,7 @@ int AVL<T>::countHelper(Node<T> *root, T val) {
 
 template <class T>
 T AVL<T>::lowerBound(T val) {
-    T ans = -1;
+    static T ans;
     lowerBoundHelper(root, val, ans);
     return ans;
 }
@@ -384,7 +441,7 @@ void AVL<T>::lowerBoundHelper(Node<T> *root, T val, T &ans) {
 
 template <class T>
 T AVL<T>::upperBound(T val) {
-    T ans = -1;
+    static T ans ;
     upperBoundHelper(root, val, ans);
     return ans;
 }
@@ -395,16 +452,24 @@ void AVL<T>::upperBoundHelper(Node<T> *root, T val, T &ans) {
     if (val < root->value) {
         ans = root->value;
         upperBoundHelper(root->left, val, ans);
-    } else if (val >= root->value) {
+    } else if (val > root->value) {
         upperBoundHelper(root->right, val, ans);
+    }
+    else{
+        upperBoundHelper(root->right, val, ans);
+
     }
 }
 
 template <class T>
 T AVL<T>::closestValue(T val) {
     // Tree empty
-    if (root == NULL) return -1;
-    T ans;
+    static T ans;
+    if (root == NULL){
+        cout<<"NOT found"<<endl;
+        return ans;
+    }
+    // T ans;
     int minAns;
     bool ansFound = false;
     closestValueHelper(root, val, ans, minAns, ansFound);
@@ -442,7 +507,8 @@ template <class T>
 T AVL<T>::KthLargest(int k) {
     if (k > size) {
         cout << "No Kth largest" << endl;
-        return -1;
+        static T defaultValue;
+        return defaultValue;
     }
     int leftElements = 0;
     int treeSize = size;
@@ -518,11 +584,10 @@ void AVL<T>::rightInterval(Node<T> *root, T val, int &rightIntervalCount) {
 // ===============================================================================
 
 int main() {
-    AVL<string> tree;
+    AVL<int> tree;
     int option;
     int k;
-    string val;
-    string a, b;
+    int val, a, b;
     cout << "================================================================" << endl;
     cout << "Available options:" << endl;
     cout << "1.Insert" << endl;
@@ -535,8 +600,7 @@ int main() {
     cout << "8.Kth largest" << endl;
     cout << "9.Range" << endl;
     cout << "10.Inorder traversal" << endl;
-    cout << "================================================================" << endl;
-    
+    cout << "================================================================" << endl; 
     while (true) {
         // cout << "Enter option: ";
         cin >> option;
@@ -576,3 +640,111 @@ int main() {
     }
     return 0;
 }
+
+// =========================================== Driver Code: comparator =================================================
+
+// int main() {
+//     // AVL<Rectangle> tree;
+//     // Rectangle val;
+//     // int l,b;
+//     AVL<Square> tree;
+//     Square val;
+//     int s;
+//     int option;
+//     int k;
+//     cout << "================================================================" << endl;
+//     cout << "Available options:" << endl;
+//     cout << "1.Insert" << endl;
+//     cout << "2.Delete" << endl;
+//     cout << "3.Search" << endl;
+//     cout << "4.Count" << endl;
+//     cout << "5.Lower bound" << endl;
+//     cout << "6.Upper bound" << endl;
+//     cout << "7.Closest element" << endl;
+//     cout << "8.Kth largest" << endl;
+//     cout << "9.Range" << endl;
+//     cout << "10.Inorder traversal" << endl;
+//     cout << "================================================================" << endl;
+//     while (true) {
+//         // cout << "Enter option: ";
+//         cin >> option;
+//         if (option == 1) {
+//             // cout<<"Enter l,b: "; cin >>l>>b;
+//             // Rectangle val(l,b);
+//             cout<<"Enter s:"; cin>>s;
+//             Square val(s);
+//             tree.insert(val);
+//         } else if (option == 2) {
+//             // cout<<"Enter l,b: "; cin >>l>>b;
+//             // Rectangle val(l,b);
+//             cout<<"Enter s:"; cin>>s;
+//             Square val(s);
+//             tree.deleteNode(val);
+//         } else if (option == 3) {
+//             // cout<<"Enter l,b: "; cin >>l>>b;
+//             // Rectangle val(l,b);
+//             // Rectangle ans = tree.search(val)->value;
+//             // cout << ans.l<<" "<<ans.b << endl;
+//             cout<<"Enter s:"; cin>>s;
+//             Square val(s);
+//             Square ans = tree.search(val)->value;
+//             cout<<ans.s<<endl;
+//         } else if (option == 4) {
+//             // cout<<"Enter l,b: "; cin >>l>>b;
+//             // Rectangle val(l,b);
+//             cout<<"Enter s:"; cin>>s;
+//             Square val(s);
+//             cout << "Count: " << tree.count(val) << endl;
+//         } else if (option == 5) {
+//             // cout<<"Enter l,b: "; cin >>l>>b;
+//             // Rectangle val(l,b);
+//             // Rectangle ans = tree.lowerBound(val);
+//             // cout << "LowerBound: " << ans.l<<" "<<ans.b << endl;
+//             cout<<"Enter s:"; cin>>s;
+//             Square val(s);
+//             Square ans = tree.lowerBound(val);
+//             cout<<ans.s<<endl;
+//         } else if (option == 6) {
+//             // cout<<"Enter l,b: "; cin >>l>>b;
+//             // Rectangle val(l,b);
+//             // Rectangle ans = tree.upperBound(val);
+//             // cout << "UpperBound: " << ans.l<<" "<<ans.b << endl;
+//             cout<<"Enter s:"; cin>>s;
+//             Square val(s);
+//             Square ans = tree.upperBound(val);
+//             cout<<ans.s<<endl;
+//         } else if (option == 7) {
+//             // cout<<"Enter l,b: "; cin >>l>>b;
+//             // Rectangle val(l,b);
+//             // Rectangle ans = tree.closestValue(val);
+//             // cout << "Closest value: " << ans.l<<" "<<ans.b << endl;
+//             cout<<"Enter s:"; cin>>s;
+//             Square val(s);
+//             Square ans = tree.closestValue(val);
+//             cout<<ans.s<<endl;
+//         } else if (option == 8) {
+//             // cin >> k;
+//             // Rectangle ans = tree.KthLargest(k);
+//             // cout << "Kth largest: " << ans.b<<" "<<ans.b << endl;
+//             Square ans = tree.KthLargest(k);
+//             cout<<ans.s<<endl;
+//         } else if (option == 9) {
+//             // cin>>l>>b;
+//             // int l2,b2; 
+//             // cin>>l2>>b2;
+//             // Rectangle left(l,b);
+//             // Rectangle right(l2,b2);
+//             int s1;
+//             cin>>s>>s1;
+//             Square left(s);
+//             Square right(s1);
+//             cout << "Range: " << tree.range(left, right) << endl;
+//         } else if (option == 10) {
+//             tree.inorderTraversal(tree.root);
+//             cout << endl;
+//         } else
+//             break;
+//         cout << endl;
+//     }
+//     return 0;
+// }
