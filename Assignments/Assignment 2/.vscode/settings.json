@@ -5,6 +5,15 @@
 		"stl_queue.h": "c",
 		"type_traits": "c",
 		"set": "cpp",
-		"iostream": "cpp"
+		"iostream": "cpp",
+		"optional": "cpp",
+		"istream": "cpp",
+		"ratio": "cpp",
+		"system_error": "cpp",
+		"array": "cpp",
+		"functional": "cpp",
+		"tuple": "cpp",
+		"utility": "cpp",
+		"variant": "cpp"
 	}
 }

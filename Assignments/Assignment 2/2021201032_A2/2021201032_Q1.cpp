@@ -144,7 +144,7 @@ class AVL {
 
     // KthLargest
     T KthLargest(int k);
-    Node<T> *KthLargestHelper(Node<T> *root, int k, int &treeSize, int &count);
+    void KthLargestHelper(Node<T> *root, int k, int &treeSize, int &count, Node<T> * &KthLargestNode);
 
     // No.of values in the range
     int range(T a, T b);
@@ -420,6 +420,7 @@ int AVL<T>::countHelper(Node<T> *root, T val) {
         return countHelper(root->right, val);
 }
 
+
 template <class T>
 void AVL<T>::lowerBound(T val) {
     Node<T> *lb = NULL;
@@ -521,25 +522,35 @@ T AVL<T>::KthLargest(int k) {
     }
     int leftElements = 0;
     int treeSize = size;
-    Node<T> *KthLargestNode = KthLargestHelper(root, k, treeSize, leftElements);
+    Node<T> *KthLargestNode = NULL;
+    KthLargestHelper(root, k, treeSize, leftElements, KthLargestNode);
+    if(KthLargestNode == NULL){
+        cout << "No Kth Largest"<<endl;
+        static T defaultValue;
+        return defaultValue;
+    }
     return KthLargestNode->value;
 }
 
 template <class T>
-Node<T> *AVL<T>::KthLargestHelper(Node<T> *root, int k, int &treeSize, int &leftElements) {
+void AVL<T>::KthLargestHelper(Node<T> *root, int k, int &treeSize, int &leftElements, Node<T>* &KthLargestNode) {
+    if(root == NULL)
+        return ;
+
     int rightSubtreeCount = treeSize - root->leftSubtreeCount - leftElements;
     if (rightSubtreeCount + 1 == k) {
-        return root;
+        KthLargestNode = root;
+        return ;
     }
     // There are K elements in the right subtree then 1 to Kth largest elements
     // will be in right subtree only
     if (rightSubtreeCount >= k) {
         leftElements += root->leftSubtreeCount;
-        return KthLargestHelper(root->right, k, treeSize, leftElements);
+        KthLargestHelper(root->right, k, treeSize, leftElements, KthLargestNode);
     } else {
-        treeSize -= rightSubtreeCount - 1;
-        k -= rightSubtreeCount - 1;
-        return KthLargestHelper(root->left, k, treeSize, leftElements);
+        treeSize = treeSize - rightSubtreeCount - root->frequency;
+        k = k- rightSubtreeCount - 1;
+        KthLargestHelper(root->left, k, treeSize, leftElements, KthLargestNode);
     }
 }
 
@@ -638,7 +649,8 @@ int main() {
             cout << "Closest value: " << tree.closestValue(val);
         } else if (option == 8) {
             cin >> k;
-            cout << "Kth Largest: " << tree.KthLargest(k) << endl;
+            // cout<<"KTH largest"<<endl;
+            cout << tree.KthLargest(k) << endl;
         } else if (option == 9) {
             cin >> a >> b;
             cout << "Range: " << tree.range(a, b) << endl;

@@ -1,0 +1,6 @@
+Assumptions: 
+-------------
+Deque:
+=====
+1. Returning last element for array out of bounds index
+2. While resizing if x > pSize, not moving the rear pointer
