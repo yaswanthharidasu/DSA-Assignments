@@ -21,7 +21,6 @@ void DFS(int index, vector<vector<int>>& graph, vector<bool>& visited, string pa
         distances[dist].paths.push_back(path);
         // cout<<dist<<endl;
         // cout<<path<<endl;
-        // cout << path << " dist:" << dist;
     }
     int n = graph.size();
     for (int i = 0; i < n; i++) {
